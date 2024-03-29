@@ -1,14 +1,28 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 
 export default function Home() {
-  const handleClick = () => {
-    console.log("Click!");
-  };
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [transcription, setTranscription] = useState('');
+
+  useEffect(() => {	
+    if (transcription) {
+      (async () => {
+        const response = await fetch("/api/gemini", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: transcription }),
+        })
+        const data = await response.json();
+        console.log(data);
+      })();
+    }
+  }, [transcription]);
 
   const startRecording = () => {
     navigator.mediaDevices.getUserMedia({ audio: true })
@@ -40,11 +54,13 @@ export default function Home() {
           })
             .then(response => {
               console.log(response.data);
+              if (response.data.transcription) {
+                setTranscription(response.data.transcription);
+              }
             })
             .catch(error => {
               console.error(error);
             });
-          console.log(formData)
         };
       })
       .catch(err => {
