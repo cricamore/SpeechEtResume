@@ -7,6 +7,8 @@ export default function Home() {
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [transcription, setTranscription] = useState('');
+  const [geminiResponse, setGeminiResponse] = useState(null);
+  const [audioSrc, setAudioSrc] = useState(null);
 
   useEffect(() => {	
     if (transcription) {
@@ -20,6 +22,14 @@ export default function Home() {
         })
         const data = await response.json();
         console.log(data);
+        setGeminiResponse(data);
+
+        const response2 = await axios.post("/api/googletts", {
+          text: data.message
+        });
+        const audioSrc = `data:audio/mp3;base64,${response2.data.audio}`;
+        //console.log(response2.data.audio)
+        setAudioSrc(audioSrc);
       })();
     }
   }, [transcription]);
@@ -76,6 +86,14 @@ export default function Home() {
     }
   };
 
+  const oirRespuesta = async () => {
+    if(geminiResponse) {
+      console.log(geminiResponse)
+    } 
+  };
+
+
+
   return (
     <>
       <head>
@@ -89,7 +107,9 @@ export default function Home() {
             <h1 className="text-5xl text-semibold mb-8">Bienvenido a NOMBREAPP</h1>
             <h2 className="text-2xl">Haz click en cualquier parte para grabar</h2>
             <div onClick={startRecording} className="mt-8 bg-blue-500 text-white py-2 px-4 rounded-lg cursor-pointer">Iniciar grabación</div>
-            <div onClick={stopRecording} className="mt-8 bg-red-500 text-white py-2 px-4 rounded-lg cursor-pointer">Detener grabación</div>
+            <div onClick={stopRecording} className="mt-8 bg-red-500 text-white py-2 px-4 rounded-lg cursor-pointer">Detener grabación   
+            </div>
+            {audioSrc && <audio autoPlay src={audioSrc}/>}      
           </div>
         </div>
       </body>
