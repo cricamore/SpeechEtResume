@@ -16,8 +16,9 @@ export default function Home() {
 
 
 
-  useEffect(() => {
+ 
 
+  const playAudio = () => {
     if(!audioSrc) {
       console.log("useEffect");
       (async () => {
@@ -31,11 +32,6 @@ export default function Home() {
       
       })()
     }
-  }
-  ,[]);
-
-  const playAudio = () => {
-    
     console.log(count);
     if (audioRef.current && count === 0) {
       audioRef.current.play();
