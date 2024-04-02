@@ -4,11 +4,11 @@
     background-size: cover;
 } */
 
-body::after {
+/* body::after {
     content: "";
     background: url("/libros fondo.jpg");
     background-size: cover;
-    position: fixed; /* or absolute */
+    position: fixed;
     top: 0;
     left: 0;
     height: 100%;
@@ -23,19 +23,111 @@ body::after {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
     text-shadow: 12px 7px 5.6px rgba(0, 0, 0, 0.25);
-}
+} */
 
-.rectangle {
-    background-color: rgba(255, 255, 255, 0.43);
-    width: 80%;
-    height: 70%;
-    border-radius: 59px;
+
+.circulo {
+    border-radius: 100%;
+    background-color: tomato;
+    width: 120px;
+    height: 120px;
+    position: relative;
+    margin-top: 5%;
     margin-left: auto;
     margin-right: auto;
     display: flex;
-    align-items: center;
+    z-index: 0;
     justify-content: center;
+    align-items: center;
+    transition: transform 0.5s;
 }
+
+.circulo:hover {
+    cursor: pointer;
+}
+
+.circulo:before,
+.circulo:after {
+    /* Crea un círculo inicialmente invisible detrás del círculo original */
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    background-color: rgba(255, 99, 71, 0.2);
+    z-index:-1;
+    transform: scale(0);
+    transition: transform 1s;
+}
+
+
+.circulo:hover:before {
+    /* Al pasar el mouse, el círculo se expande */
+    transform: scale(1.2);
+    transition: transform 0.7s;
+}
+
+.circulo:hover:after {
+    /* Al pasar el mouse, el círculo se expande */
+    transform: scale(1.4);
+    transition: transform 1s;
+}
+
+@keyframes grow-shrink {
+    0% { transform: scale(1.2); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1.2); }
+}
+
+@keyframes grow-shrink2 {
+    0% { transform: scale(1.4); }
+    50% { transform: scale(1.6); }
+    100% { transform: scale(1.4); }
+}
+  
+.circulo.recording:before {
+    animation: grow-shrink 1.3s infinite;
+}
+
+.circulo.recording:after {
+    animation: grow-shrink2 1.3s infinite;
+}
+
+.circulo.recording .wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 100%;
+    /* background-color: rgba(255, 99, 71, 0.2); */
+    border: 2px solid rgba(255, 99, 71, 0.178);
+    z-index: -1;
+    transform: scale(0);
+    animation: wave 1.8s infinite;
+}
+
+@keyframes wave {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+}
+  
+/* .circulo.recording::after {
+    animation: wave 2s infinite;
+    border: 2px solid rgba(255, 99, 71, 0.178);
+    background-color: transparent;
+} */
+
+
+
+
+
+
+
 
 /* h2{
     text-align: center;
