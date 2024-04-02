@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "./style.css";
 import axios from "axios";
 
@@ -8,10 +8,45 @@ export default function Home() {
 
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [transcription, setTranscription] = useState('');
-  const [geminiResponse, setGeminiResponse] = useState(null);
   const [recording, setRecording] = useState(false);
   const [recordingText, setRecordingText] = useState("Grabar");
   const [audioSrc, setAudioSrc] = useState(null);
+  const audioRef = useRef();
+  const [count, setCount] = useState(0);
+
+
+
+  useEffect(() => {
+
+    if(!audioSrc) {
+      console.log("useEffect");
+      (async () => {
+      const response = await axios.post("/api/googletts", {
+        text: "Hola, bienvenido a SpeechBookSumm, tu asistente de resúmenes literarios. Para grabar tu petición haz click en cualquier parte de la pantalla",
+      });
+      const audioSrc = `data:audio/mp3;base64,${response.data.audio}`;
+      //console.log(response.data.audio)
+      setAudioSrc(audioSrc);
+      
+      
+      })()
+    }
+  }
+  ,[]);
+
+  const playAudio = () => {
+    
+    console.log(count);
+    if (audioRef.current && count === 0) {
+      audioRef.current.play();
+      
+    }
+  };
+  
+
+
+  
+ 
 
   useEffect(() => {	
     if (transcription) {
@@ -25,10 +60,13 @@ export default function Home() {
         })
         const data = await response.json();
         console.log(data);
-        setGeminiResponse(data);
+        
+        const cleanText = data.message.replace(/[*\´]/g, "");
+
+
 
         const response2 = await axios.post("/api/googletts", {
-          text: data.message
+          text: cleanText,
         });
         const audioSrc = `data:audio/mp3;base64,${response2.data.audio}`;
         //console.log(response2.data.audio)
@@ -149,16 +187,16 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <div className="flex items-center justify-center h-screen w-screen" >
-          <div className="bg-gray-100 px-32 py-24 rounded-lg text-center">
+        <div className="flex items-center justify-center h-screen w-screen" onClick={playAudio} >
+          <div className="bg-gray-100 px-32 py-24 rounded-lg text-center cursor-pointer hover:scale-[1.025] transition duration-300" onClick={handleRecording}>
             <h1 className="text-5xl text-semibold mb-8"><strong>Bienvenido a <i>SpeechBookSumm</i></strong></h1>
             <h2 className="text-2xl">Haz click en cualquier parte para grabar</h2>
-            <div onClick={handleRecording} className={`circulo variacion ${recording ? 'recording' : ''}`}><strong>{recordingText}</strong>
+            <div className={`circulo variacion ${recording ? 'recording' : ''}`}><strong>{recordingText}</strong>
               <div className="wave"></div>
             </div>
             {/* <div/onClick={startRecording} className="mt-8 bg-blue-500 text-white py-2 px-4 rounded-lg cursor-pointer">Iniciar grabación</div>
             <div onClick={stopRecording} className="mt-8 bg-red-500 text-white py-2 px-4 rounded-lg cursor-pointer">Detener grabación</div> */}
-            {audioSrc && <audio autoPlay src={audioSrc}/>}      
+            {audioSrc && <audio autoPlay src={audioSrc}  />}      
           </div>
         </div>
       </body>

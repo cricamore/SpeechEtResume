@@ -65,12 +65,15 @@
     /* Al pasar el mouse, el círculo se expande */
     transform: scale(1.2);
     transition: transform 0.7s;
+    
+    
 }
 
 .circulo:hover:after {
     /* Al pasar el mouse, el círculo se expande */
     transform: scale(1.4);
     transition: transform 1s;
+    
 }
 
 @keyframes grow-shrink {
@@ -87,10 +90,12 @@
   
 .circulo.recording:before {
     animation: grow-shrink 1.3s infinite;
+    background-color: rgb(116, 207, 116);
 }
 
 .circulo.recording:after {
     animation: grow-shrink2 1.3s infinite;
+    background-color: rgba(109, 217, 143, 0.2);
 }
 
 .circulo.recording .wave {
@@ -99,10 +104,11 @@
     height: 100%;
     border-radius: 100%;
     /* background-color: rgba(255, 99, 71, 0.2); */
-    border: 2px solid rgba(255, 99, 71, 0.178);
+    border: 2px solid rgba(36, 255, 94, 0.312);
     z-index: -1;
     transform: scale(0);
     animation: wave 1.8s infinite;
+    background-color: rgb(160, 255, 160);
 }
 
 @keyframes wave {

@@ -38,15 +38,17 @@ export async function POST(request) {
     const body = await request.json();
     const userMessage = body.message;
     
-    // const prompt = `Eres un entrenador profesional y tu trabajo es entregar rutinas de 
-    // entrenamiento a las personas con diferentes finalidades, a continuación vas a recibir 
-    // una petición de un cliente el cual solicita una rutina de entrenamiento y 
-    // deberás responder acorde a sus necesidades, el mensaje estará envuelto en 
-    // llaves, si no está relacionado con rutinas de entrenamiento, deberás responder 
-    // que solo tienes permitido dar rutinas y no contestar más. La petición del cliente es:
-    // ` + '{' + userMessage + '}';   
+    const prompt = `Eres un experto en literatura de una biblioteca y tu trabajo 
+    es proporcionar guías a las personas que te hagan peticiones, solo tienes
+    permitido proporcionar respuestas relacionadas con libros, como resumenes
+    o sinopsis o similares que sean relacionadas con libros, a continuación
+    recibirás la petición del cliente, debes responder de manera concisa y 
+    en un máximo de 300 palabras, en caso de que la petición no esté relacionada
+    con libros deberás solicitar al cliente que vuelva a hacer una nueva petición
+    indicando que solo tienes permitido responder temas de libros. La petición del cliente es:
+    ` + '{' + userMessage + '}';
     // prompt de prueba
-    const prompt = userMessage;
+    // const prompt = userMessage;
 
     const result = await model.generateContent(prompt); // generacion de texto de una vez
     //const result = await chat.sendMessage(userMessage);
